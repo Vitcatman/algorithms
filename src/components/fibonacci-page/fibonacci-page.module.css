@@ -1,0 +1,16 @@
+.form {
+  display: flex;
+  max-width: 377px;
+  gap: 12px;
+  margin: 0 auto;
+}
+
+.circle {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 80px auto 0 auto;
+  justify-content: center;
+  row-gap: 60px;
+  column-gap: 15px;
+}
