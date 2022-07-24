@@ -58,7 +58,9 @@ export const SortingPage: React.FC = () => {
           arr[maxInd].state =
             i !== maxInd ? ElementStates.Default : ElementStates.Changing;
         }
-        if (j !== maxInd) {arr[j].state = ElementStates.Default};
+        if (j !== maxInd) {
+          arr[j].state = ElementStates.Default;
+        }
         setRandomArray([...arr]);
       }
 
@@ -80,19 +82,22 @@ export const SortingPage: React.FC = () => {
         if (arr[j + 1]) arr[j + 1].state = ElementStates.Changing;
         setRandomArray([...arr]);
         await timeout(SHORT_DELAY_IN_MS);
-        if ( direction === 'ascending' ? arr[j].el > arr[j + 1].el : arr[j].el < arr[j + 1].el) {
-          swap(arr, j, j+1);
-          }
-          arr[j].state = ElementStates.Default;
-          if (arr[j + 1]) arr[j + 1].state = ElementStates.Default;
-          setRandomArray([...arr]);
-
+        if (
+          direction === 'ascending'
+            ? arr[j].el > arr[j + 1].el
+            : arr[j].el < arr[j + 1].el
+        ) {
+          swap(arr, j, j + 1);
+        }
+        arr[j].state = ElementStates.Default;
+        if (arr[j + 1]) arr[j + 1].state = ElementStates.Default;
+        setRandomArray([...arr]);
       }
-      arr[arr.length - i - 1].state = ElementStates.Modified
+      arr[arr.length - i - 1].state = ElementStates.Modified;
       setRandomArray([...arr]);
-  }
-  setIsLoading(false);
-  }
+    }
+    setIsLoading(false);
+  };
 
   return (
     <SolutionLayout title='Сортировка массива'>
@@ -118,7 +123,10 @@ export const SortingPage: React.FC = () => {
           disabled={isLoading}
           sorting={Direction.Ascending}
           extraClass={styles.button}
-          onClick={() => { sortingMethod === "selection" ? selectionSort(randomArray, 'ascending') : bubbleSort(randomArray, 'ascending');
+          onClick={() => {
+            sortingMethod === 'selection'
+              ? selectionSort(randomArray, 'ascending')
+              : bubbleSort(randomArray, 'ascending');
           }}
         />
         <Button
@@ -128,8 +136,11 @@ export const SortingPage: React.FC = () => {
           disabled={isLoading}
           sorting={Direction.Descending}
           extraClass={styles.button}
-          onClick={() => { sortingMethod === "selection" ? selectionSort(randomArray, 'descending') : bubbleSort(randomArray, 'descending');
-        }}
+          onClick={() => {
+            sortingMethod === 'selection'
+              ? selectionSort(randomArray, 'descending')
+              : bubbleSort(randomArray, 'descending');
+          }}
         />
         <Button
           text='Новый массив'

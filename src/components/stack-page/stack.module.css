@@ -1,0 +1,20 @@
+.form {
+  display: flex;
+  max-width: 377px;
+  gap: 12px;
+  margin: 0 auto;
+  justify-content: center;
+}
+
+.input {
+  min-width: 300px;
+}
+.circle {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 80px auto 0 auto;
+  row-gap: 70px;
+  column-gap: 16px;
+}
