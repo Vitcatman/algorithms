@@ -11,7 +11,7 @@ import styles from './app.module.css';
 
 function App() {
   return (
-    <div className='app'>
+    <div className={styles.app}>
       <BrowserRouter>
         <Switch>
           <Route path='/' exact>

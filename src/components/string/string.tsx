@@ -70,7 +70,7 @@ export const StringComponent: React.FC = () => {
           isLimitText={true}
           onChange={(evt) => handleInput(evt)}
         />
-        <Button isLoader={isLoading} text='Развернуть' type='submit' />
+        <Button isLoader={isLoading} text='Развернуть' type='submit' disabled={isLoading || input === ''} />
       </form>
       <div className={styles.circle}>
         {reversedArray.map((item, i) => {

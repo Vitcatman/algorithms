@@ -47,11 +47,10 @@ export const FibonacciPage: React.FC = () => {
           isLimitText={true}
           onChange={(evt) => handleInput(evt)}
         />
-        <Button isLoader={isLoading} text='Рассчитать' type='submit' />
+        <Button isLoader={isLoading} text='Рассчитать' type='submit' disabled={input > 19 || input < 0 } />
       </form>
       <div className={styles.circle}>
         {calculatedArray.map((item, i) => {
-          console.log(item);
           return <Circle key={i} letter={item + ''} index={i} />;
         })}
       </div>
