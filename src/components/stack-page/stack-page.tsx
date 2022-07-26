@@ -81,7 +81,7 @@ export const StackPage: React.FC = () => {
         <Button
           text='Добавить'
           isLoader={isLoading}
-          disabled={isLoading}
+          disabled={isLoading || input === ''}
           type='submit'
         />
         <Button

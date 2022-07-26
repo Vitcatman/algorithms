@@ -47,7 +47,12 @@ export const FibonacciPage: React.FC = () => {
           isLimitText={true}
           onChange={(evt) => handleInput(evt)}
         />
-        <Button isLoader={isLoading} text='Рассчитать' type='submit' disabled={input > 19 || input < 0 } />
+        <Button
+          isLoader={isLoading}
+          text='Рассчитать'
+          type='submit'
+          disabled={input > 19 || input <= 0 || isNaN(input)}
+        />
       </form>
       <div className={styles.circle}>
         {calculatedArray.map((item, i) => {
