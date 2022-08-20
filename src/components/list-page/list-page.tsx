@@ -32,9 +32,10 @@ export const ListPage: React.FC = () => {
 
   const linkedList = new LinkedList<string>(initialList);
   const [inputValue, setInputValue] = useState<string>('');
-  const [inputIndex, setInputIndex] = useState<number>(0);
+  const [inputIndex, setInputIndex] = useState<number | null>(0);
   const [arr, setArr] = useState<IListItem[]>(defaultList);
   const [isLoading, setIsLoading] = useState<string>('');
+  console.log(inputIndex);
 
   useEffect(() => {
     arr[0].head = true;
@@ -195,7 +196,10 @@ export const ListPage: React.FC = () => {
   };
 
   const addIndexItem = async () => {
-    if (inputIndex < 0 || inputIndex > linkedList.getSize()) {
+    if (
+      inputIndex &&
+      ((inputIndex && inputIndex < 0) || inputIndex > linkedList.getSize())
+    ) {
       console.log('Enter a valid index');
       return;
     }
@@ -237,7 +241,7 @@ export const ListPage: React.FC = () => {
         status: ElementStates.Default,
         head: true,
       };
-    } else {
+    } else if (inputIndex) {
       linkedList.insertAt(inputValue, inputIndex!);
       for (let i = 0; i <= inputIndex; i++) {
         arr[i] = {
@@ -284,37 +288,39 @@ export const ListPage: React.FC = () => {
 
   const deleteIndexItem = async () => {
     setIsLoading('deleteElementIndex');
-    for (let i = 0; i <= inputIndex; i++) {
-      arr[i].status = ElementStates.Changing;
-      if (i === inputIndex) {
+    if (inputIndex) {
+      for (let i = 0; i <= inputIndex; i++) {
+        arr[i].status = ElementStates.Changing;
+        if (i === inputIndex) {
+        }
+        setArr([...arr]);
+        await timeout(DELAY_IN_MS);
       }
+      arr[inputIndex] = {
+        ...arr[inputIndex],
+        name: '',
+        dell: true,
+        miniCircle: {
+          name: String(inputIndex),
+        },
+      };
       setArr([...arr]);
+
       await timeout(DELAY_IN_MS);
+
+      arr.splice(inputIndex, 1);
+      setArr([...arr]);
+
+      await timeout(DELAY_IN_MS);
+
+      arr.forEach((el, i) => (el.status = ElementStates.Default));
+      setArr([...arr]);
+
+      arr[arr.length - 1].tail = true;
+      arr[0].head = true;
+      setArr([...arr]);
+      setIsLoading('');
     }
-    arr[inputIndex] = {
-      ...arr[inputIndex],
-      name: '',
-      dell: true,
-      miniCircle: {
-        name: String(inputIndex),
-      },
-    };
-    setArr([...arr]);
-
-    await timeout(DELAY_IN_MS);
-
-    arr.splice(inputIndex, 1);
-    setArr([...arr]);
-
-    await timeout(DELAY_IN_MS);
-
-    arr.forEach((el, i) => (el.status = ElementStates.Default));
-    setArr([...arr]);
-
-    arr[arr.length - 1].tail = true;
-    arr[0].head = true;
-    setArr([...arr]);
-    setIsLoading('');
   };
 
   const isDisabled = (order: string) => {
@@ -366,7 +372,6 @@ export const ListPage: React.FC = () => {
             onChange={(e) => setInputIndex(Number(e.currentTarget.value))}
             type='number'
             placeholder='Введите индекс'
-            value={inputIndex}
             extraClass={styles.input}
           />
 
@@ -389,7 +394,8 @@ export const ListPage: React.FC = () => {
             onClick={deleteIndexItem}
             disabled={
               arr.length <= 1 ||
-              inputIndex > arr.length - 1 ||
+              (inputIndex && inputIndex > arr.length - 1) ||
+              !inputIndex ||
               isDisabled('deleteElementIndex')
             }
             extraClass={styles.big_input}
