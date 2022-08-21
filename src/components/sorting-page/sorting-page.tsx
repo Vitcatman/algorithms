@@ -2,23 +2,17 @@ import { useState, useEffect } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Button } from '../ui/button/button';
 import styles from './sorting-page.module.css';
-import { timeout, swap } from '../../utils';
-import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { RadioInput } from '../ui/radio-input/radio-input';
 import { Direction } from '../../types/direction';
 import { ElementStates } from '../../types/element-states';
 import { Column } from '../ui/column/column';
-
-interface IArrayObj {
-  el: number;
-  state: ElementStates;
-}
+import { IArrayObj } from './utils';
+import { selectionSort, bubbleSort } from './utils';
 
 export const SortingPage: React.FC = () => {
   const [sortingMethod, setSortingMethod] = useState('selection');
   const [randomArray, setRandomArray] = useState<IArrayObj[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
   useEffect(() => {
     generateRandomArray(3, 17, 100);
   }, []);
@@ -38,63 +32,12 @@ export const SortingPage: React.FC = () => {
     setRandomArray(arrColumns);
   };
 
-  const selectionSort = async (arr: IArrayObj[], direction: string) => {
+  const sort = async (direction: string, sortingMethod: string) => {
     setIsLoading(true);
-    for (let i = 0; i < arr.length - 1; i++) {
-      let maxInd = i;
-      arr[maxInd].state = ElementStates.Changing;
-
-      for (let j = i + 1; j < arr.length; j++) {
-        arr[j].state = ElementStates.Changing;
-        setRandomArray([...arr]);
-        await timeout(SHORT_DELAY_IN_MS);
-
-        if (
-          (direction === 'descending' ? arr[j].el : arr[maxInd].el) >
-          (direction === 'descending' ? arr[maxInd].el : arr[j].el)
-        ) {
-          maxInd = j;
-          arr[j].state = ElementStates.Changing;
-          arr[maxInd].state =
-            i !== maxInd ? ElementStates.Default : ElementStates.Changing;
-        }
-        if (j !== maxInd) {
-          arr[j].state = ElementStates.Default;
-        }
-        setRandomArray([...arr]);
-      }
-
-      swap(arr, i, maxInd);
-
-      arr[maxInd].state = ElementStates.Default;
-      arr[i].state = ElementStates.Modified;
-      setRandomArray([...arr]);
-    }
-    arr[arr.length - 1].state = ElementStates.Modified;
-    setIsLoading(false);
-  };
-
-  const bubbleSort = async (arr: IArrayObj[], direction: string) => {
-    setIsLoading(true);
-    for (let i = 0; i < arr.length; i++) {
-      for (let j = 0; j < arr.length - i - 1; j++) {
-        arr[j].state = ElementStates.Changing;
-        if (arr[j + 1]) arr[j + 1].state = ElementStates.Changing;
-        setRandomArray([...arr]);
-        await timeout(SHORT_DELAY_IN_MS);
-        if (
-          direction === 'ascending'
-            ? arr[j].el > arr[j + 1].el
-            : arr[j].el < arr[j + 1].el
-        ) {
-          swap(arr, j, j + 1);
-        }
-        arr[j].state = ElementStates.Default;
-        if (arr[j + 1]) arr[j + 1].state = ElementStates.Default;
-        setRandomArray([...arr]);
-      }
-      arr[arr.length - i - 1].state = ElementStates.Modified;
-      setRandomArray([...arr]);
+    if (sortingMethod === 'selection') {
+      await selectionSort(randomArray, direction, setRandomArray);
+    } else {
+      await bubbleSort(randomArray, direction, setRandomArray);
     }
     setIsLoading(false);
   };
@@ -124,9 +67,7 @@ export const SortingPage: React.FC = () => {
           sorting={Direction.Ascending}
           extraClass={styles.button}
           onClick={() => {
-            sortingMethod === 'selection'
-              ? selectionSort(randomArray, 'ascending')
-              : bubbleSort(randomArray, 'ascending');
+            sort('ascending', sortingMethod);
           }}
         />
         <Button
@@ -137,9 +78,7 @@ export const SortingPage: React.FC = () => {
           sorting={Direction.Descending}
           extraClass={styles.button}
           onClick={() => {
-            sortingMethod === 'selection'
-              ? selectionSort(randomArray, 'descending')
-              : bubbleSort(randomArray, 'descending');
+            sort('ascending', sortingMethod);
           }}
         />
         <Button
