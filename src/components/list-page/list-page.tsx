@@ -35,7 +35,6 @@ export const ListPage: React.FC = () => {
   const [inputIndex, setInputIndex] = useState<number | null>(0);
   const [arr, setArr] = useState<IListItem[]>(defaultList);
   const [isLoading, setIsLoading] = useState<string>('');
-  console.log(inputIndex);
 
   useEffect(() => {
     arr[0].head = true;
